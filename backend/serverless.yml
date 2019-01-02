@@ -97,3 +97,23 @@ functions:
           cors: true
           authorizer:
             arn: ${env:USER_POOL_ARN}
+  updateItem:
+    description: 更新
+    handler: src/todo/index.updateItem
+    events:
+      - http:
+          path: todo/{id}
+          method: put
+          cors: true
+          authorizer:
+            arn: ${env:USER_POOL_ARN}
+  deleteItem:
+    description: 削除
+    handler: src/todo/index.deleteItem
+    events:
+      - http:
+          path: todo/{id}
+          method: delete
+          cors: true
+          authorizer:
+            arn: ${env:USER_POOL_ARN}

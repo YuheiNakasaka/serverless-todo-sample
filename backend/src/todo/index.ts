@@ -111,3 +111,70 @@ export const createItem: APIGatewayProxyHandler = async (event, context) => {
 
   return response(200, resp);
 };
+
+export const updateItem: APIGatewayProxyHandler = async (event, context) => {
+  const eventBody: any = event.body;
+  const requestBody = JSON.parse(eventBody);
+  if (!requestBody || !requestBody.email || !requestBody.content) {
+    return response(400, { message: "invalid parameter" });
+  }
+
+  if (!event.pathParameters || !event.pathParameters.id) {
+    return response(400, { message: "invalid parameter" });
+  }
+
+  const params = {
+    TableName: `${process.env["DYNAMODB_TABLE"]}`,
+    Key: {
+      email: requestBody.email,
+      id: event.pathParameters.id
+    },
+    UpdateExpression: "set content = :val",
+    ExpressionAttributeValues: {
+      ":val": requestBody.content
+    },
+    ReturnValues: "UPDATED_NEW"
+  };
+
+  const resp = await new Promise((resolve, reject) => {
+    dynamodb.update(params, function(err, data) {
+      if (err) return reject(err);
+      resolve(data);
+    });
+  }).catch(e => {
+    return response(500, { message: `${e}` });
+  });
+
+  return response(200, resp);
+};
+
+export const deleteItem: APIGatewayProxyHandler = async (event, context) => {
+  const eventBody: any = event.body;
+  const requestBody = JSON.parse(eventBody);
+  if (!requestBody || !requestBody.email) {
+    return response(400, { message: "invalid parameter" });
+  }
+
+  if (!event.pathParameters || !event.pathParameters.id) {
+    return response(400, { message: "invalid parameter" });
+  }
+
+  const params = {
+    TableName: `${process.env["DYNAMODB_TABLE"]}`,
+    Key: {
+      email: requestBody.email,
+      id: event.pathParameters.id
+    }
+  };
+
+  const resp = await new Promise((resolve, reject) => {
+    dynamodb.delete(params, function(err, data) {
+      if (err) return reject(err);
+      resolve(data);
+    });
+  }).catch(e => {
+    return response(500, { message: `${e}` });
+  });
+
+  return response(200, resp);
+};
