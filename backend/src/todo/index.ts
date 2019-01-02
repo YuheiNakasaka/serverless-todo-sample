@@ -17,6 +17,10 @@ const dynamodb = new DynamoDB.DocumentClient({
 function response(code: number, body: { [key: string]: any }) {
   return {
     statusCode: code,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": true
+    },
     body: JSON.stringify(body)
   };
 }
@@ -109,7 +113,7 @@ export const createItem: APIGatewayProxyHandler = async (event, context) => {
     return response(500, { message: `${e}` });
   });
 
-  return response(200, resp);
+  return response(200, item);
 };
 
 export const updateItem: APIGatewayProxyHandler = async (event, context) => {
