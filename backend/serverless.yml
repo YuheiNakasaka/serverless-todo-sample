@@ -13,7 +13,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   environment:
     DEPLOY_STAGE: ${opt:stage, 'dev'}
-    DYNAMODB_TABLE: sls-todo-backend-dev-todo
+    DYNAMODB_TABLE: sls-todo-backend
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -55,13 +55,17 @@ resources:
       Type: "AWS::DynamoDB::Table"
       DeletionPolicy: Delete
       Properties:
-        TableName: sls-todo-backend-dev-todo
+        TableName: sls-todo-backend
         AttributeDefinitions:
+          - AttributeName: userID
+            AttributeType: S
           - AttributeName: id
             AttributeType: S
         KeySchema:
-          - AttributeName: id
+          - AttributeName: userID
             KeyType: HASH
+          - AttributeName: id
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

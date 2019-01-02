@@ -1,7 +1,7 @@
 {
   "AttributeDefinitions": [
     {
-      "AttributeName": "email",
+      "AttributeName": "userID",
       "AttributeType": "S"
     },
     {
@@ -12,7 +12,7 @@
   "TableName": "sls-todo-backend-dev-todo",
   "KeySchema": [
     {
-      "AttributeName": "email",
+      "AttributeName": "userID",
       "KeyType": "HASH"
     },
     {

@@ -8,13 +8,13 @@ Edit `env.example` and rename `.env`.
 
 ```
 # Get all items
-curl -X GET "http://localhost:3000/todo?email=test@example.com"
+curl -X GET "http://localhost:3000/todo?userID=208debc9-27ac-4579-8715-96a3092c81dc"
 # Get a item
-curl -X GET "http://localhost:3000/todo/2c7d84b2-491c-4e14-b0ca-91fa73c4fea7?email=test@example.com"
+curl -X GET "http://localhost:3000/todo/1de2b208-b3f4-4ea4-9a85-fd3f7164a6da?userID=208debc9-27ac-4579-8715-96a3092c81dc"
 # Create item
-curl -X POST "http://localhost:3000/todo" -d "{\"email\":\"test@example.com\",\"content\":\"the sun set in the west\"}"
+curl -X POST "http://localhost:3000/todo" -d "{\"userID\":\"208debc9-27ac-4579-8715-96a3092c81dc\",\"content\":\"the sun set in the west\"}"
 # Update item
-curl -X PUT "http://localhost:3000/todo/2c7d84b2-491c-4e14-b0ca-91fa73c4fea7" -d "{\"email\":\"test@example.com\",\"content\":\"I love a egg.\"}"
+curl -X PUT "http://localhost:3000/todo/1de2b208-b3f4-4ea4-9a85-fd3f7164a6da" -d "{\"userID\":\"208debc9-27ac-4579-8715-96a3092c81dc\",\"content\":\"I love a egg.\"}"
 # Delete item
-curl -X DELETE "http://localhost:3000/todo/dab9a933-958b-4ae6-89f5-7a077e4217be" -d "{\"email\":\"test@example.com\"}"
+curl -X DELETE "http://localhost:3000/todo/1de2b208-b3f4-4ea4-9a85-fd3f7164a6da" -d "{\"userID\":\"208debc9-27ac-4579-8715-96a3092c81dc\"}"
 ```
