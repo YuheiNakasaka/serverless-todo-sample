@@ -4,6 +4,10 @@
 
 Edit `env.example` and rename `.env`.
 
+```
+$ sls offline start
+```
+
 # Example
 
 ```
