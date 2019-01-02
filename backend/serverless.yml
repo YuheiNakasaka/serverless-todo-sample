@@ -1,0 +1,89 @@
+service: sls-todo-backend
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs8.10
+  memorySize: 512
+  timeout: 30
+  logRetentionInDays: 3
+  versionFunctions: false
+  deploymentBucket: # S3にバケットが乱立するのを防ぐためにやってるが無理に設定しなくてもいい
+    name: gm-serverless-sandbox
+  stage: ${opt:stage, 'dev'}
+  environment:
+    DEPLOY_STAGE: ${opt:stage, 'dev'}
+    DYNAMODB_TABLE: sls-todo-backend-dev-todo
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "*"
+      Resource:
+        - "${env:USER_POOL_IAM}"
+    - Effect: "Allow"
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+
+plugins:
+  - serverless-prune-plugin
+  - serverless-webpack
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom:
+  prune:
+    automatic: true
+    number: 3
+
+package:
+  exclude:
+    - .git/**
+    - src/**
+  excludeDevDependencies: false
+
+resources:
+  Resources:
+    ResourcesDynamoDbTable:
+      Type: "AWS::DynamoDB::Table"
+      DeletionPolicy: Delete
+      Properties:
+        TableName: sls-todo-backend-dev-todo
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+functions:
+  getItem:
+    description: 取得
+    handler: src/todo/index.getItem
+    events:
+      - http:
+          path: todo/{id}
+          method: get
+          cors: true
+          authorizer:
+            arn: ${env:USER_POOL_ARN}
+  createItem:
+    description: 作成
+    handler: src/todo/index.createItem
+    events:
+      - http:
+          path: todo
+          method: post
+          cors: true
+          authorizer:
+            arn: ${env:USER_POOL_ARN}

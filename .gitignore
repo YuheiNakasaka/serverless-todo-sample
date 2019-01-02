@@ -1,0 +1,24 @@
+.DS_Store
+
+# backend
+backend/.serverless
+backend/.webpack
+backend/node_modules
+backend/.env*
+
+# frontend
+frontend/.DS_Store
+frontend/node_modules/
+frontend//dist/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/src/aws-exports.js
+
+# Editor directories and files
+frontend/.idea
+frontend/.vscode
+frontend/*.suo
+frontend/*.ntvs*
+frontend/*.njsproj
+frontend/*.sln

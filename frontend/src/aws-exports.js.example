@@ -1,0 +1,28 @@
+import Amplify from "aws-amplify";
+Amplify.configure({
+  Auth: {
+    // フェデレーションアイデンティティのID
+    // ex. us-east-1:XXXXXXX-XXXXXX-XXXXXXXXX-XXXXXXX
+    identityPoolId: "YOUR_FEDERATOIN_ID",
+    // リージョン
+    // ex. us-east-1_PfvX52Qo3
+    region: "YOUR_REGION",
+    // ユーザープールのID
+    // ex. us-east-1_XXXXXXXXXXX
+    userPoolId: "YOUR_USER_POOL_ID",
+    // ユーザープールのウェブクライアントID
+    // ex. abcdefghijklmnbopqrstuvwyz
+    userPoolWebClientId: "YOUR_USER_POOL_CLIENT_ID",
+    mandatorySignIn: true
+  },
+  API: {
+    endpoints: [
+      {
+        // ex. todo-backend
+        name: "YOUR_ENDPOINT_NAME",
+        // ex. https://XXXXXXXXX.execute-api.us-east-1.amazonaws.com
+        endpoint: "YOUR_API_ENDPOINT"
+      }
+    ]
+  }
+});
