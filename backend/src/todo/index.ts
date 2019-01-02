@@ -1,5 +1,6 @@
 import { DynamoDB } from "aws-sdk";
 import { APIGatewayProxyHandler, APIGatewayEvent } from "aws-lambda";
+import { v4 as uuid } from "uuid";
 
 let region = process.env["AWS_REGION"];
 let DYNAMODB_ENDPOINT = `https://dynamodb.${region}.amazonaws.com`;
@@ -27,15 +28,19 @@ export const getItem: APIGatewayProxyHandler = async (
     return response(400, { message: "invalid parameter" });
   }
 
-  const dynamodbParams = {
+  const params = {
     TableName: `${process.env["DYNAMODB_TABLE"]}`,
-    Key: {
-      id: event.pathParameters.id
+    KeyConditionExpression: "#hash = :str",
+    ExpressionAttributeNames: {
+      "#hash": "id"
+    },
+    ExpressionAttributeValues: {
+      ":str": event.pathParameters.id
     }
   };
 
   const resp = await new Promise((resolve, reject) => {
-    dynamodb.get(dynamodbParams, function(err, data) {
+    dynamodb.query(params, function(err, data) {
       if (err) return reject(err);
       resolve(data);
     });
@@ -47,32 +52,25 @@ export const getItem: APIGatewayProxyHandler = async (
 };
 
 export const createItem: APIGatewayProxyHandler = async (event, context) => {
-  var item = {
-    id: "1",
+  const item = {
+    id: uuid(),
+    email: "test@example.com",
     content: "this is a pen"
   };
 
-  var params = {
+  const params = {
     TableName: `${process.env["DYNAMODB_TABLE"]}`,
     Item: item
   };
 
-  await new Promise(resolve => {
+  const resp = await new Promise((resolve, reject) => {
     dynamodb.put(params, function(err, data) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(data);
-      }
-      resolve();
+      if (err) return reject(err);
+      resolve(data);
     });
+  }).catch(e => {
+    return response(500, { message: e });
   });
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: "Success!",
-      input: event
-    })
-  };
+  return response(200, resp);
 };
