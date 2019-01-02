@@ -1,22 +1,22 @@
 {
   "AttributeDefinitions": [
     {
-      "AttributeName": "id",
+      "AttributeName": "email",
       "AttributeType": "S"
     },
     {
-      "AttributeName": "email",
+      "AttributeName": "id",
       "AttributeType": "S"
     }
   ],
   "TableName": "sls-todo-backend-dev-todo",
   "KeySchema": [
     {
-      "AttributeName": "id",
+      "AttributeName": "email",
       "KeyType": "HASH"
     },
     {
-      "AttributeName": "email",
+      "AttributeName": "id",
       "KeyType": "RANGE"
     }
   ],

@@ -67,6 +67,16 @@ resources:
           WriteCapacityUnits: 1
 
 functions:
+  getItems:
+    description: 一覧取得
+    handler: src/todo/index.getItems
+    events:
+      - http:
+          path: todo
+          method: get
+          cors: true
+          authorizer:
+            arn: ${env:USER_POOL_ARN}
   getItem:
     description: 取得
     handler: src/todo/index.getItem
