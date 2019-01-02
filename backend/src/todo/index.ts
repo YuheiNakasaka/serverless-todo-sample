@@ -52,10 +52,16 @@ export const getItem: APIGatewayProxyHandler = async (
 };
 
 export const createItem: APIGatewayProxyHandler = async (event, context) => {
+  const eventBody: any = event.body;
+  const requestBody = JSON.parse(eventBody);
+  if (!requestBody || !requestBody.email || !requestBody.content) {
+    return response(400, { message: "invalid parameter" });
+  }
+
   const item = {
     id: uuid(),
-    email: "test@example.com",
-    content: "this is a pen"
+    email: requestBody.email,
+    content: requestBody.content
   };
 
   const params = {
@@ -69,7 +75,7 @@ export const createItem: APIGatewayProxyHandler = async (event, context) => {
       resolve(data);
     });
   }).catch(e => {
-    return response(500, { message: e });
+    return response(500, { message: `${e}` });
   });
 
   return response(200, resp);
